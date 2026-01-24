@@ -1,0 +1,17 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: demo-app
+  namespace: demo-app
+spec:
+  hosts:
+    # PLACEHOLDER: Replace with your app domain via Kustomize patch
+    - "__APP_DOMAIN__"
+  gateways:
+    - demo-app-gateway
+  http:
+    - route:
+        - destination:
+            host: demo-app
+            port:
+              number: 80

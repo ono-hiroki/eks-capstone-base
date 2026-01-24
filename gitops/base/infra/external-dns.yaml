@@ -1,0 +1,42 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+  annotations:
+    argocd.argoproj.io/sync-wave: "-2"
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    targetRevision: 1.14.3
+    helm:
+      values: |
+        provider: aws
+        aws:
+          # PLACEHOLDER: Replace with your AWS region
+          region: __REGION__
+        domainFilters:
+          # PLACEHOLDER: Replace with your domain
+          - __HOSTED_ZONE_NAME__
+        policy: sync
+        sources:
+          - ingress
+        serviceAccount:
+          create: true
+          name: external-dns
+          annotations:
+            # PLACEHOLDER: Replace with your IAM role ARN
+            eks.amazonaws.com/role-arn: __EXTERNAL_DNS_ROLE_ARN__
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: external-dns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

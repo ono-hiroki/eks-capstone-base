@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: istio-gateway
+  namespace: istio-system
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    alb.ingress.kubernetes.io/backend-protocol: HTTP
+    # PLACEHOLDER: Replace with your ACM certificate ARN
+    alb.ingress.kubernetes.io/certificate-arn: __APP_ACM_CERTIFICATE_ARN__
+    alb.ingress.kubernetes.io/healthcheck-path: /healthz/ready
+    alb.ingress.kubernetes.io/healthcheck-port: "15021"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTPS":443}]'
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+    alb.ingress.kubernetes.io/target-type: ip
+    # PLACEHOLDER: Replace with your app domain
+    external-dns.alpha.kubernetes.io/hostname: __APP_DOMAIN__
+spec:
+  ingressClassName: alb
+  rules:
+    # PLACEHOLDER: Replace with your app domain
+    - host: __APP_DOMAIN__
+      http:
+        paths:
+          - backend:
+              service:
+                name: istio-ingressgateway
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix

@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Capstone Demo App</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --success-color: #10b981;
+            --background-color: #f8fafc;
+            --card-background: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .card {
+            background: var(--card-background);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card h2 {
+            font-size: 1.25rem;
+            color: var(--secondary-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--background-color);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .info-item {
+            padding: 1rem;
+            background: var(--background-color);
+            border-radius: 8px;
+        }
+
+        .info-item label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            margin-bottom: 0.25rem;
+        }
+
+        .info-item .value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-color);
+            word-break: break-all;
+        }
+
+        .info-item .value.secret {
+            font-family: monospace;
+            color: var(--success-color);
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 0.25rem 0.75rem;
+            background: #dcfce7;
+            color: #166534;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .status-badge::before {
+            content: '';
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            background: #22c55e;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .tech-badge {
+            padding: 0.25rem 0.75rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Capstone Demo App</h1>
+            <p>EKS + Terraform + GitOps (Argo CD) + Istio + External Secrets</p>
+        </div>
+
+        <div class="card">
+            <h2>Application Status</h2>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>Status</label>
+                    <span class="status-badge">Running</span>
+                </div>
+                <div class="info-item">
+                    <label>Environment</label>
+                    <span class="value" id="app-env">__APP_ENV__</span>
+                </div>
+                <div class="info-item">
+                    <label>Version</label>
+                    <span class="value" id="app-version">__APP_VERSION__</span>
+                </div>
+                <div class="info-item">
+                    <label>App Name</label>
+                    <span class="value" id="app-name">__APP_NAME__</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>ConfigMap Values</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
+                Non-sensitive configuration loaded from Kubernetes ConfigMap
+            </p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>APP_ENV</label>
+                    <span class="value" id="config-env">__APP_ENV__</span>
+                </div>
+                <div class="info-item">
+                    <label>APP_VERSION</label>
+                    <span class="value" id="config-version">__APP_VERSION__</span>
+                </div>
+                <div class="info-item">
+                    <label>APP_NAME</label>
+                    <span class="value" id="config-name">__APP_NAME__</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Secret Values (from External Secrets)</h2>
+            <p style="color: var(--text-muted); margin-bottom: 1rem; font-size: 0.875rem;">
+                Sensitive values synced from AWS Secrets Manager via External Secrets Operator
+            </p>
+            <div class="info-grid">
+                <div class="info-item">
+                    <label>DB_PASSWORD</label>
+                    <span class="value secret" id="secret-db">__DB_PASSWORD__</span>
+                </div>
+                <div class="info-item">
+                    <label>API_KEY</label>
+                    <span class="value secret" id="secret-api">__API_KEY__</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Technology Stack</h2>
+            <div class="tech-stack">
+                <span class="tech-badge">EKS</span>
+                <span class="tech-badge">Terraform</span>
+                <span class="tech-badge">Argo CD</span>
+                <span class="tech-badge">Istio</span>
+                <span class="tech-badge">External Secrets</span>
+                <span class="tech-badge">ECR</span>
+                <span class="tech-badge">ACM</span>
+                <span class="tech-badge">Route 53</span>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Capstone Project - EKS Hands-on Learning</p>
+        </div>
+    </div>
+</body>
+</html>

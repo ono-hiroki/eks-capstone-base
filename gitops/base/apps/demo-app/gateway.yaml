@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1
+kind: Gateway
+metadata:
+  name: demo-app-gateway
+  namespace: demo-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1"
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+    - port:
+        number: 80
+        name: http
+        protocol: HTTP
+      hosts:
+        # PLACEHOLDER: Replace with your app domain via Kustomize patch
+        - "__APP_DOMAIN__"

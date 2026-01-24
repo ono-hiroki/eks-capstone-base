@@ -1,0 +1,27 @@
+# AWS Region
+aws_region = "ap-northeast-1"
+
+# EKS Cluster Name
+cluster_name = "capstone-cluster"
+
+# Kubernetes Version
+cluster_version = "1.31"
+
+# Argo CD Domain Name
+argocd_domain_name = "argocd.your-domain.com"  # Change to your domain
+
+# Application Domain Name
+app_domain_name = "app.your-domain.com"  # Change to your domain
+
+# Route 53 Hosted Zone Name
+hosted_zone_name = "your-domain.com"  # Change to your domain
+
+# VPC CIDR
+vpc_cidr = "10.0.0.0/16"
+
+# Tags
+tags = {
+  Project     = "capstone"
+  Environment = "demo"
+  ManagedBy   = "terraform"
+}

@@ -1,0 +1,18 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Istio
+  - istio-base.yaml
+  - istio-istiod.yaml
+  - istio-gateway.yaml
+  # External Secrets Operator
+  - external-secrets.yaml
+  - external-secrets-sa.yaml
+  # External DNS
+  - external-dns.yaml
+  # Ingress
+  - istio-ingress.yaml
+  - argocd-ingress.yaml
+  # Reloader
+  - reloader.yaml

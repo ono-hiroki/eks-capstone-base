@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-app
+  namespace: demo-app
+  annotations:
+    argocd.argoproj.io/sync-wave: "0"
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: demo-app
+  template:
+    metadata:
+      labels:
+        app: demo-app
+        version: v1
+    spec:
+      serviceAccountName: demo-app-sa
+      containers:
+        - name: demo-app
+          # PLACEHOLDER: Replace with your ECR image via Kustomize images transformer
+          image: __IMAGE__
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: demo-app-config
+            - secretRef:
+                name: demo-app-secret
+                optional: true
+          resources:
+            limits:
+              cpu: 200m
+              memory: 256Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+          livenessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 10
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /healthz
+              port: 80
+            initialDelaySeconds: 5
+            periodSeconds: 5
