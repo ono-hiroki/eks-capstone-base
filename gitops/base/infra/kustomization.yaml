@@ -18,4 +18,3 @@ resources:
   - reloader.yaml
   # Prometheus + Grafana
   - kube-prometheus-stack.yaml
-  - grafana-ingress.yaml
