@@ -4,6 +4,7 @@ metadata:
   name: grafana
   namespace: monitoring
   annotations:
+    argocd.argoproj.io/sync-wave: "0"
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
     alb.ingress.kubernetes.io/backend-protocol: HTTP
