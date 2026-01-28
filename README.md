@@ -8,14 +8,14 @@ EKS Capstone Project の Kustomize ベースリポジトリです。
 
 ```
 eks-capstone-base/
-├── terraform/              # Terraform 設定（VPC, EKS, IAM, ACM）
+├── terraform/              # Terraform 設定（VPC, EKS, IAM, ACM, EBS CSI）
 ├── app/                    # デモアプリ（Dockerfile, HTML）
 ├── scripts/                # bootstrap.sh, cleanup.sh
 └── gitops/
     └── base/
         ├── apps/
         │   └── demo-app/   # デモアプリのマニフェスト
-        └── infra/          # インフラ系マニフェスト（Istio, ESO, etc.）
+        └── infra/          # インフラ系マニフェスト（Istio, ESO, Prometheus+Grafana, etc.）
 ```
 
 ## インフラ構成図
@@ -48,6 +48,7 @@ eks-capstone-base/
 | `istio-ingress.yaml` | `__APP_DOMAIN__` | アプリのドメイン名 |
 | `argocd-ingress.yaml` | `__ARGOCD_ACM_CERTIFICATE_ARN__` | Argo CD 用 ACM 証明書 ARN |
 | `argocd-ingress.yaml` | `__ARGOCD_DOMAIN__` | Argo CD のドメイン名 |
+| `kube-prometheus-stack.yaml` | - | Helm values はオーバーレイで全置換 |
 
 ## 使い方
 
@@ -74,7 +75,8 @@ my-eks-capstone/
 │   │       ├── external-dns-patch.yaml
 │   │       ├── external-secrets-sa-patch.yaml
 │   │       ├── istio-ingress-patch.yaml
-│   │       └── argocd-ingress-patch.yaml
+│   │       ├── argocd-ingress-patch.yaml
+│   │       └── kube-prometheus-stack-patch.yaml
 │   └── demo-app/
 │       ├── kustomization.yaml
 │       └── patches/
@@ -136,8 +138,9 @@ kubectl kustomize overlays/demo-app
 
 - VPC / Subnet
 - EKS クラスタ
-- IAM Role / Policy（IRSA）
-- ACM 証明書
+- EKS Addons（CoreDNS, kube-proxy, VPC CNI, EBS CSI Driver）
+- IAM Role / Policy（IRSA: ALB Controller, External Secrets, External DNS, EBS CSI, Demo App）
+- ACM ワイルドカード証明書（`*.hosted_zone_name`）
 
 使用前に `terraform.tfvars.example` をコピーして `terraform.tfvars` を作成し、自分の環境の値を設定してください。
 
