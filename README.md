@@ -145,10 +145,20 @@ kubectl kustomize overlays/demo-app
 
 `app/` ディレクトリには nginx ベースのシンプルなデモアプリが含まれています。
 
+デプロイされたアプリは以下のような画面を表示します。ConfigMap や External Secrets Operator 経由で取得した値が確認できます。
+
+![デモアプリ画面](docs/images/demo-app-screenshot.png)
+
 ```bash
 cd app
 docker build -t capstone-demo:v1 .
 ```
+
+## Argo CD
+
+GitOps によるデプロイは Argo CD で管理されます。App of Apps パターンを採用しており、以下のアプリケーションが自動的にデプロイされます。
+
+![Argo CD ダッシュボード](docs/images/argocd-dashboard.png)
 
 ## スクリプト
 
