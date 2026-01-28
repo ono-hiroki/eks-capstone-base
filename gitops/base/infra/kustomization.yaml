@@ -16,3 +16,6 @@ resources:
   - argocd-ingress.yaml
   # Reloader
   - reloader.yaml
+  # Prometheus + Grafana
+  - kube-prometheus-stack.yaml
+  - grafana-ingress.yaml

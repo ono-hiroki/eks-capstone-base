@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: grafana
+  namespace: monitoring
+  annotations:
+    alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-1:332987817135:certificate/b933e2e8-ad27-4312-9ad7-1ec1ab5e6f6a
+    external-dns.alpha.kubernetes.io/hostname: grafana.verification.sonicmoov.com
+spec:
+  rules:
+    - host: grafana.verification.sonicmoov.com
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: kube-prometheus-stack-grafana
+                port:
+                  number: 80
