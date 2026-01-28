@@ -48,15 +48,10 @@ output "external_dns_role_arn" {
   value       = module.external_dns_irsa.iam_role_arn
 }
 
-# ACM Certificate ARNs (used by bootstrap.sh)
-output "argocd_acm_certificate_arn" {
-  description = "ACM certificate ARN for Argo CD"
-  value       = aws_acm_certificate.argocd.arn
-}
-
-output "app_acm_certificate_arn" {
-  description = "ACM certificate ARN for application"
-  value       = aws_acm_certificate.app.arn
+# ACM Certificate ARN
+output "wildcard_acm_certificate_arn" {
+  description = "Wildcard ACM certificate ARN for all subdomains"
+  value       = aws_acm_certificate.wildcard.arn
 }
 
 # Route 53 (used by bootstrap.sh)
